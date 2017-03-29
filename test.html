@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<script>
+
+console.log("Testing l field presence in http://finance.google.com/finance/info?client=ig&q=NSE:PYPL");
+assertLfield("http://finance.google.com/finance/info?client=ig&q=NSE:PYPL");
+console.log("Testing l field presence in http://finance.google.com/finance/info?client=ig&q=NSE:EBAY");
+assertLfield("http://finance.google.com/finance/info?client=ig&q=NSE:EBAY");
+console.log("Testing l field presence in http://finance.google.com/finance/info?client=ig&q=NSE:PP");
+assertLfield("http://finance.google.com/finance/info?client=ig&q=NSE:PP");
+
+/* 
+ * Checks whether field with name "l" is present and prints the error if not present in console log.
+ * NOTE: Cross Origin Request Security (CORS) should be disabled before running this test.
+ * For chrome on windows we can use the following command to launch chrome
+ * "chrome.exe --disable-web-security --user-data-dir="C:\temp"".
+ * Please close all chrome instances before running this command.
+ */
+function assertLfield(url) {
+  /*Get JSON from URL*/
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    /*Sanitize Json object. Remove "\" characters present in API*/
+	var jsonObj = this.responseText.replace(/\//g, "");
+	jsonObj = JSON.parse(jsonObj);
+    console.assert(jsonObj[0].hasOwnProperty('l'), "ERROR: l field is NOT present for API " + url);
+  } 
+  };
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+}
+
+</script>
+
+</body>
+</html>
